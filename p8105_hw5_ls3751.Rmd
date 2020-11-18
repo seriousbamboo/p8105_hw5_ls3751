@@ -185,6 +185,7 @@ study_tidy %>%
     y = "Observations on each subject")
 ```
 
+__Comment__: Observations of experimental and control group at week 1 are approximately the same. Generally, it is noticeable that the observation level in experimental group showed an increasing trend whereas the observation level in control group fluctuated about 1.25 over the period of eight weeks, showing no pattern of change.
 
 ## Problem 3 simulation to explore power in a one-sample t-test!!
 
@@ -232,12 +233,13 @@ stimulation_df %>%
   geom_point(size = 1.5) +
   geom_line() +
   labs(
-    title = "The association between size effect and power",
+    title = "The association between effect size and power",
     x = "True value of μ",
     y = "Power") 
 ```
 
 
+__Comment__: It seems that power is positively associated with effect size that the power would increase as the true value of mu increased from 0 to 6 which means the effect size = (true mean - mu null) would increase. Since variance maintained the same and parameter mu null set to 0, it became more unlikely to see extreme cases of average estimate equals to 0 as the power increased. In other words, the rejection region would be larger as the distribution move leftwards.
 
 ### 3.3 Make a plot showing the average estimate of μ^ on the y axis and the true value of μ on the x axis; Make a second plot (or overlay on the first) the average estimate of μ^ only in samples for which the null was rejected on the y axis and the true value of μ on the x axis
 
@@ -284,3 +286,4 @@ combine_df %>%
     y = "Average estimate")
 ```
 
+__Comment__: The sample average μ^ for all data is approximately equals to the true value of μ which consistent with the underlying population distribution. The sample average of μ^ across tests for which the null is rejected is not approximately equal to the true value of μ especially when the power of the test is not great enough. However, when true value of μ is 0, the average of μ^ is approximately the same as the true value of μ because about same amounts of extreme cases are being rejected. It is noticeable that the difference between the sample average of μ^ of rejected groups and the true values became smaller as the effect size increases. When true value of μ equals to 1 or 2, only samples with greater sample means are rejected so that the average estimate of μ^ is larger than the true value of μ. As more and more samples being rejected, the average estimate of μ^ is approximately equal to the true value.  

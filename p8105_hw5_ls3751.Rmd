@@ -2,6 +2,7 @@
 title: "p8105_hw5_ls3751"
 author: "Liucheng Shi"
 output: github_document
+
 ---
 
 ```{r setup, include = FALSE}
@@ -123,6 +124,8 @@ homicide_df =
 
 ### 2.1 Start with a dataframe containing all file names, iterate over file names and read in data for each subject using purrr::map and saving the result as a new variable in the dataframe
 
+<details>
+  <summary>code for data manipulation</summary>
 ```{r, message = F}
 study_df = 
   tibble(
@@ -132,9 +135,12 @@ study_df =
     path = str_c("data/", path),
     data = map(.x = path, ~read_csv(.x)))
 ```
+</details>
 
 ### 2.2 Tidy the result; manipulate file names to include control arm and subject ID
 
+<details>
+  <summary>code for data manipulation</summary>
 ```{r}
 study_tidy = study_df %>% 
   unnest(data) %>% 
@@ -150,18 +156,32 @@ study_tidy = study_df %>%
                values_to = "observation") %>% 
   mutate(week = factor(week))
 ```
+</details>
 
 ### 2.3 Make a spaghetti plot showing observations on each subject over time
 
-```{r}
+```{r Spaghetti plot - observations by arm over time}
 study_tidy %>% 
   ggplot(aes(x = week, y = observation, group = id, color = id)) +
+  geom_point(size = 1.2) +
+  geom_line() +
+  labs(
+    title = "Spaghetti plot - observations by arm over time",
+    x = "Time (week)",
+    y = "Observations on each subject") +
+  facet_grid(. ~ arm)
+```
+
+```{r Spaghetti plot - observations over time}
+study_tidy %>% 
+  group_by(arm, id) %>% 
+  ggplot(aes(x = week, y = observation, color = arm, group = interaction(arm, id))) +
+  geom_point(size = 1.2) +
   geom_line() +
   labs(
     title = "Spaghetti plot - observations over time",
     x = "Time (week)",
-    y = "Observations on each subject") +
-  facet_grid(. ~ arm)
+    y = "Observations on each subject")
 ```
 
 
@@ -170,6 +190,8 @@ study_tidy %>%
 
 ### 3.1 Generate the datasets for mu = 0,1,2,3,4,5,6
 
+<details>
+  <summary>Click here to show code</summary>
 ```{r, cache = T}
 stimulation = function(mu, sd = 5, size = 30, iterate = 5000){
   stimulation = tibble(
@@ -195,10 +217,12 @@ stimulation_combine = tibble(
 stimulation_df = stimulation_combine %>% 
   unnest(cols = c(output))
 ```
+</details>
+
 
 ### 3.2 Make a plot showing the proportion of times the null was rejected (the power of the test) on the y axis and the true value of μ on the x axis
 
-```{r, message = F}
+```{r The association between size effect and power, message = F}
 stimulation_df %>% 
   group_by(mu) %>% 
   summarize(percent = length(decision[decision == "Reject"])/n()) %>% 
@@ -216,6 +240,8 @@ stimulation_df %>%
 
 ### 3.3 Make a plot showing the average estimate of μ^ on the y axis and the true value of μ on the x axis; Make a second plot (or overlay on the first) the average estimate of μ^ only in samples for which the null was rejected on the y axis and the true value of μ on the x axis
 
+<details>
+  <summary>code for data manipulation</summary>
 ```{r, message = F}
 all_df = stimulation_df %>% 
   group_by(mu) %>% 
@@ -232,8 +258,9 @@ combine_df = left_join(all_df, rejected_df, by = "mu") %>%
                names_prefix = "avgest_",
                values_to = "average_estimate")
 ```
+</details>
 
-```{r}
+```{r The association between average estimate of μ^ and the true value of μ}
 combine_df %>% 
   filter(type == "all") %>% 
   ggplot(aes(x = mu, y = average_estimate)) +
@@ -243,6 +270,9 @@ combine_df %>%
     title = "The association between average estimate of μ^ and the true value of μ",
     x = "True value of μ",
     y = "Average estimate")
+```
+
+```{r The association between true value of μ and the average estimated μ^ in All and rejected samples}
 combine_df %>% 
   ggplot(aes(x = mu, y = average_estimate, color = type)) +
   geom_point() +

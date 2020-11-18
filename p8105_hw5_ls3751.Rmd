@@ -154,7 +154,8 @@ study_tidy = study_df %>%
                names_to = "week",
                names_prefix = "week_",
                values_to = "observation") %>% 
-  mutate(week = factor(week))
+  mutate(week = factor(week),
+         arm = fct_relevel(arm, "experimental"))
 ```
 </details>
 

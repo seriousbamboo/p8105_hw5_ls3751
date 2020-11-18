@@ -199,14 +199,10 @@ stimulation_df = stimulation_combine %>%
 ### 3.2 Make a plot showing the proportion of times the null was rejected (the power of the test) on the y axis and the true value of μ on the x axis
 
 ```{r, message = F}
-summary_df = stimulation_df %>% 
+stimulation_df %>% 
   group_by(mu) %>% 
   summarize(percent = length(decision[decision == "Reject"])/n()) %>% 
-  as_tibble()
-```
-
-```{r}
-summary_df %>% 
+  as_tibble() %>% 
   ggplot(aes(x = mu, y = percent)) +
   geom_point(size = 1.5) +
   geom_line() +
@@ -217,4 +213,43 @@ summary_df %>%
 ```
 
 
+
+### 3.3 Make a plot showing the average estimate of μ^ on the y axis and the true value of μ on the x axis; Make a second plot (or overlay on the first) the average estimate of μ^ only in samples for which the null was rejected on the y axis and the true value of μ on the x axis
+
+```{r, message = F}
+all_df = stimulation_df %>% 
+  group_by(mu) %>% 
+  summarise(avgest_all = mean(sample_mean)) %>% 
+  as_tibble()
+rejected_df = stimulation_df %>% 
+  filter(decision == "Reject") %>% 
+  group_by(mu) %>% 
+  summarise(avgest_rejected = mean(sample_mean)) %>% 
+  as_tibble()
+combine_df = left_join(all_df, rejected_df, by = "mu") %>% 
+  pivot_longer(avgest_all:avgest_rejected,
+               names_to = "type",
+               names_prefix = "avgest_",
+               values_to = "average_estimate")
+```
+
+```{r}
+combine_df %>% 
+  filter(type == "all") %>% 
+  ggplot(aes(x = mu, y = average_estimate)) +
+  geom_point() +
+  geom_line() +
+  labs(
+    title = "The association between average estimate of μ^ and the true value of μ",
+    x = "True value of μ",
+    y = "Average estimate")
+combine_df %>% 
+  ggplot(aes(x = mu, y = average_estimate, color = type)) +
+  geom_point() +
+  geom_line() +
+  labs(
+    title = "The association between true value of μ and the average estimated μ^ in All and rejected samples",
+    x = "True value of μ",
+    y = "Average estimate")
+```
 

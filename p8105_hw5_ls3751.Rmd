@@ -286,4 +286,11 @@ combine_df %>%
     y = "Average estimate")
 ```
 
-__Comment__: The sample average μ^ for all data is approximately equals to the true value of μ which consistent with the underlying population distribution. The sample average of μ^ across tests for which the null is rejected is not approximately equal to the true value of μ especially when the power of the test is not great enough. However, when true value of μ is 0, the average of μ^ is approximately the same as the true value of μ because about same amounts of extreme cases are being rejected. It is noticeable that the difference between the sample average of μ^ of rejected groups and the true values became smaller as the effect size increases. When true value of μ equals to 1 or 2, only samples with greater sample means are rejected so that the average estimate of μ^ is larger than the true value of μ. As more and more samples being rejected, the average estimate of μ^ is approximately equal to the true value.  
+__Comment__:  
+The sample average μ^ for all data is approximately equals to the true value of μ which consistent with the underlying population distribution.  
+The sample average of μ^ across tests for which the null is rejected is approximately equal to the true value of μ __unless__ the power of the test is not great enough.
+
+*   When true value of μ is 0, the average of μ^ is approximately the same as the true value of μ because about same amounts of extreme cases are being rejected. 
+*   When true value of μ equals to 1 or 2, only samples with greater sample means are rejected so that the average estimate of μ^ is larger than the true value of μ.
+
+It is noticeable that the difference between the sample average of μ^ of rejected groups and the true values became smaller as the effect size increases. As more and more samples being rejected, the average estimate of μ^ is approximately equal to the true value.  
